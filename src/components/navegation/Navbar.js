@@ -1,34 +1,26 @@
-import React from "react";
+import { Outlet, Link } from "react-router-dom";
+import { GrConfigure } from "react-icons/gr";
+import React, { Component } from 'react';
 
-const Navbar = () => {
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Navbar</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Home</a>
+export class Navbar extends Component {
+    render() {
+        return (
+            <div className="navbar-page">
+                <nav className="navbar navbar-expand-lg navbar-light p-2 ml-3" style={{ backgroundColor: "#0CC8A8" }}>
+                    <div className="navbar-brand m-3 mr-5" href="#">Manage Desserts<i className="configure-icon"><GrConfigure /></i></div>
+                    <div className="collapse navbar-collapse" id="navbarText">
+                        <ul className="navbar-nav mr-auto ml-0">
+                            <li className="nav-item active p-3">
+                                <Link to="/" className="nav-link">Home</Link>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Features</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            <li className="nav-item active p-3">
+                                <Link to="/new" className="nav-link">New Dessert</Link>
                             </li>
                         </ul>
                     </div>
-                </div>
-            </nav>
-        </div>
-    )
-}
-
-export default Navbar
+                </nav>
+                <Outlet />
+            </div>
+        )
+    }
+};
