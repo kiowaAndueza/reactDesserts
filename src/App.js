@@ -3,33 +3,34 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Navbar } from './components/navegation/Navbar';
 import Form from './pages/Form';
 import { Footer } from './components/footer/Footer';
 import PageNotFound from './pages/PageNotFound'
 import React, { useEffect, useState } from 'react';
 import { dessertApi } from './api/dessertApi';
-import Swal from 'sweetalert2';
+import { LogIn } from './components/form/LogIn';
+import { CreateNewUser } from './components/form/CreateNewUser';
+import { getAllDesserts } from './services/ApiServices';
+import ListUser from './pages/ListUser';
+import DessertListUser from './pages/DessertListUser';
+import { CreateNewList } from './components/form/CreateNewList';
+import { CreateNewDessertUser } from './components/form/CreateNewDessertUser';
+import Profile from './pages/Profile';
+import { errorMessage } from './components/messages/Messages';
+import { Menu } from './components/navegation/Navbar';
+
 
 export default function App() {
   const [desserts, setDessert] = useState([]);
   const [loading, setIsLoader] = useState(true);
 
-  const fetchCharacters = async (dessertApi) => {
+  const fetchCharacters = async () => {
     setIsLoader(true);
     try {
-      const response = await fetch(dessertApi);
-      const { data } = await response.json();
-      setDessert(data);
+      const response = await getAllDesserts();
+      setDessert(response.data.data);
     } catch (error) {
-      console.log(error);
-      Swal.fire({
-        title: 'Error ' + error,
-        text: 'Do you want to continue?',
-        icon: 'error',
-        confirmButtonColor: "#0CC8A8",
-        confirmButtonText: 'OK'
-      });
+      errorMessage(error);
     }
     setIsLoader(false);
   }
@@ -52,10 +53,17 @@ export default function App() {
     <div className='app'>
       <Router>
         <Routes>
-          <Route path="/" element={<Navbar />}>
+          <Route path="/" element={<Menu />}>
             <Route index element={<Home characters={desserts}/>} />
             <Route path="/new" element={<Form />}/>
             <Route path="*" element={<PageNotFound />} />
+            <Route path="/register" element={<CreateNewUser/>} />
+            <Route path='/myLists' element={< ListUser/>}/>
+            <Route path='/newList' element={< CreateNewList/>}/>
+            <Route path="/myList" element={<DessertListUser />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/newDessertUser" element={<CreateNewDessertUser />}/>
+            <Route path="/profile" element={<Profile />}/>
           </Route>
         </Routes>
         <Footer />

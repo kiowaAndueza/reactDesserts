@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 export class Footer extends Component {
     render() {
         return (
-            <footer className="text-center text-white mt-5" style={{ backgroundColor: "#0CC8A8" }}>
+            <footer className="text-center text-white" style={{ backgroundColor: "#0CC8A8" }}>
                 <div className="container pt-4">
                     <section>
                         <a

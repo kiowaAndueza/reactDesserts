@@ -1,14 +1,24 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Swal from "sweetalert2";
-import { api } from "../../api/dessertApi";
+import { useNavigate } from "react-router-dom";
+import { store } from "../../token/Token";
+import { containerLogger } from "../../logger/IsLogger";
+import { login } from "../../services/Authentication";
 
-
-export function LogIn() {
+export function LogIn(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+
+  const [token, setToken] = store.useState("token");
+  const [isLogger, setLogger] = containerLogger.useState("isLogger");
+
+  const navigate = useNavigate();
+  const redirectToPath = (path) => {
+    navigate(path);
+  };
+
 
   //VALIDATE AND SAVE USERS
   const handleValidationAndSave = async () => {
@@ -24,29 +34,20 @@ export function LogIn() {
       return result;
     } else {
       setIsSaving(true);
-      console.log(isSaving);
-
-      var request = "/login";
-      var url = api + request;
       try {
-        await axios
-          .post(url, {
-            email: email,
-            password: password,
-          })
-          .then((response) => {
-            console.log(response.data);
-            Swal.fire({
-              icon: "success",
-              title: "You have successfully logged in",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            setEmail("");
-            setPassword("");
-            setIsSaving(false);
-            //window.location.reload(false);
+        const response = await login(email, password);
+        if(response){
+          Swal.fire({
+            icon: "success",
+            title: "You have successfully logged in",
+            showConfirmButton: false,
+            timer: 1500,
           });
+          setIsSaving(false);
+          setToken(response.data.token);
+          setLogger(true);
+          redirectToPath("/");
+        }
       } catch (error) {
         Swal.fire({
           title: "Error ",
@@ -56,11 +57,13 @@ export function LogIn() {
           confirmButtonText: "OK",
         });
       }
+      setEmail("");
+      setPassword("");
     }
   };
 
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-center mb-5">
       <form className="form-created mb-5">
         <div className="row justify-content-center">
           <div className="form-group">
@@ -93,6 +96,15 @@ export function LogIn() {
               name="password"
               placeholder="password"
             />
+          </div>
+
+          <div className="container mb-3">
+            <div className="row">
+              <p className="textLogin">
+                Don't you have an account?  
+                <a href="/register"> Sign up here</a>
+              </p>
+            </div>
           </div>
 
           <div className="container">
